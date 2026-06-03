@@ -1,0 +1,41 @@
+name: gacha-alert
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # 5분마다
+  workflow_dispatch: {}       # 수동 실행 버튼
+
+concurrency:
+  group: gacha-alert
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore alert state
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: gacha-alert-state-${{ github.run_id }}
+          restore-keys: gacha-alert-state-
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check & notify
+        env:
+          SITE_URL: https://tif-gacha-web.vercel.app
+          SITE_ACCESS_KEY: ${{ secrets.SITE_ACCESS_KEY }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: node check.js
+
+      - name: Save alert state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: gacha-alert-state-${{ github.run_id }}
