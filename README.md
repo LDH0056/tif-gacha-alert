@@ -1,9 +1,10 @@
 # tif-gacha-alert
 
-강력추천 가챠가 새로 뜨면 텔레그램으로 알림 (GitHub Actions 5분 크론).
+가챠 회수율(환원율)이 **90% / 95% / 100%** 를 돌파하면 텔레그램으로 알림 (GitHub Actions 15분 크론).
 
-본체 웹앱(tif-gacha-web)의 `/api/gachas`를 호출해 `recommend` 가챠를 감지하고,
-이전 상태(state.json, Actions 캐시)와 비교해 **새로 뜬 것만** 텔레그램으로 보냅니다.
+본체 웹앱(tif-gacha-web)의 `/api/gachas?source=tif|tplay` 를 호출해 각 가챠의 회수율(ratio)을 보고,
+가챠당 각 단계를 **1번씩만** 발송. 이미 알린 단계는 재알림 안 함(상태=state.json, Actions 캐시).
+1회 비용 1,000코인 미만(100원 이벤트 등)은 노이즈 컷으로 제외.
 
 ## 설정 (GitHub repo → Settings → Secrets and variables → Actions)
 - `TG_BOT_TOKEN` — 텔레그램 봇 토큰 (@BotFather)
