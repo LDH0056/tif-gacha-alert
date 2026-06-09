@@ -2,7 +2,12 @@ name: gacha-alert
 on:
   schedule:
     - cron: '*/15 * * * *'   # 15분마다
-  workflow_dispatch: {}       # 수동 실행 버튼
+  workflow_dispatch:           # 수동 실행 버튼
+    inputs:
+      test:
+        description: '테스트 알림 1회 발송'
+        type: boolean
+        default: false
 
 concurrency:
   group: gacha-alert
@@ -31,6 +36,7 @@ jobs:
           SITE_ACCESS_KEY: ${{ secrets.SITE_ACCESS_KEY }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          TEST_PING: ${{ inputs.test }}
         run: node check.js
 
       - name: Save alert state

@@ -38,6 +38,12 @@ async function sendTG(text) {
 (async () => {
   if (!DRY && (!KEY || !TG || !CHAT)) { console.log('환경변수 누락 (SITE_ACCESS_KEY/TG_BOT_TOKEN/TG_CHAT_ID)'); process.exit(0); }
 
+  // 수동 테스트 핑 (workflow_dispatch에서 test=true)
+  if (process.env.TEST_PING === 'true') {
+    await sendTG('✅ <b>테스트 알림</b>\n회수율 봇 정상 작동 중 — 15분마다 감시.\n가챠가 90% / 95% / 100% 돌파하면 각 단계 1회 알림이 옵니다.');
+    console.log('테스트 핑 발송 완료');
+  }
+
   // 상태 로드: { milestones: { "tif:16111": 95, ... } }  (구버전 배열/형식이면 무시)
   let milestones = {};
   try {
